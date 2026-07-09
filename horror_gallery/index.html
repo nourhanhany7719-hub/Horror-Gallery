@@ -1,0 +1,2957 @@
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horror Gallery — معرض أفلام الرعب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-crimson-top: #3d0000;
+            --bg-crimson-mid: #1f0000;
+            --bg-crimson-bottom: #0a0000;
+            --card-bg: #1a0a0a;
+            --card-bg-alt: #1e0c0c;
+            --text-light: #e8e0d8;
+            --text-muted: #b5a59a;
+            --text-dark: #0d0000;
+            --accent-gold: #c4944a;
+            --accent-red: #c0392b;
+            --accent-red-glow: #e74c3c;
+            --border-red: #5c1a1a;
+            --border-gold: #8b6914;
+            --badge-13: #e67e22;
+            --badge-16: #d35400;
+            --badge-18: #c0392b;
+            --overlay-dark: rgba(0, 0, 0, 0.75);
+            --blur-header: rgba(20, 0, 0, 0.7);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 40px rgba(180, 30, 30, 0.35);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --radius-pill: 50px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-main: 'Cairo', sans-serif;
+            --max-width: 1400px;
+            --header-height: 70px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            :root {
+                --transition-fast: 0s;
+                --transition-smooth: 0s;
+            }
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(180deg, #4a0000 0%, #2d0000 8%, #1a0000 25%, #0d0000 50%, #060000 100%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Subtle atmospheric overlay layers */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(80, 10, 10, 0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(40, 5, 5, 0.2) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 80%, rgba(20, 0, 0, 0.3) 0%, transparent 50%);
+            opacity: 0.8;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px);
+            opacity: 0.5;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #5c1a1a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7a2222;
+        }
+
+        /* ============ HEADER ============ */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--blur-header);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(120, 30, 30, 0.4);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--transition-smooth), box-shadow var(--transition-smooth);
+        }
+        .site-header.scrolled {
+            background: rgba(15, 0, 0, 0.88);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+            border-bottom-color: rgba(160, 40, 40, 0.5);
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #0d0000;
+            flex-shrink: 0;
+        }
+        .header-brand .brand-icon {
+            font-size: 2rem;
+            color: #0d0000;
+            filter: drop-shadow(0 2px 6px rgba(180, 30, 30, 0.5));
+            transition: transform var(--transition-fast);
+        }
+        .header-brand:hover .brand-icon {
+            transform: scale(1.1) rotate(-8deg);
+        }
+        .header-brand .brand-name {
+            font-size: 1.55rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #0d0000;
+            text-shadow: 0 1px 2px rgba(200, 50, 50, 0.25);
+            white-space: nowrap;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .header-btn {
+            background: rgba(20, 0, 0, 0.6);
+            border: 1px solid rgba(140, 40, 40, 0.5);
+            color: #d4c0b0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            position: relative;
+            text-decoration: none;
+        }
+        .header-btn:hover,
+        .header-btn:focus-visible {
+            background: rgba(60, 15, 15, 0.8);
+            border-color: var(--accent-red);
+            color: #fff;
+            box-shadow: 0 0 16px rgba(200, 40, 40, 0.4);
+            outline: none;
+        }
+        .header-btn .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 9px;
+            height: 9px;
+            background: var(--accent-red-glow);
+            border-radius: 50%;
+            border: 1.5px solid #fff;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #d4c0b0;
+            font-size: 1.6rem;
+            cursor: pointer;
+            padding: 6px;
+            transition: color var(--transition-fast);
+        }
+        .mobile-menu-btn:hover {
+            color: #fff;
+        }
+
+        /* ============ MAIN LAYOUT ============ */
+        .main-layout {
+            display: flex;
+            gap: 28px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .side-aside {
+            width: 320px;
+            flex-shrink: 0;
+            position: sticky;
+            top: calc(var(--header-height) + 20px);
+            align-self: flex-start;
+            max-height: calc(100vh - var(--header-height) - 40px);
+            overflow-y: auto;
+            z-index: 2;
+        }
+
+        /* ============ SEARCH ============ */
+        .search-section {
+            margin-bottom: 24px;
+        }
+        .search-wrapper {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .search-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(20, 5, 5, 0.85);
+            border: 2px solid rgba(140, 40, 40, 0.5);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            transition: all var(--transition-smooth);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .search-input-wrap:focus-within {
+            border-color: var(--accent-red-glow);
+            box-shadow: 0 0 28px rgba(200, 35, 35, 0.4), 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+        .search-input-wrap .search-icon {
+            position: absolute;
+            right: 18px;
+            color: #9a7a6a;
+            font-size: 1.1rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .search-input-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 15px 48px 15px 50px;
+            font-size: 1rem;
+            font-family: var(--font-main);
+            color: #f0e6dc;
+            width: 100%;
+            outline: none;
+            direction: rtl;
+        }
+        .search-input-wrap input::placeholder {
+            color: #8a7060;
+            font-size: 0.9rem;
+        }
+        .search-clear-btn {
+            position: absolute;
+            left: 10px;
+            background: rgba(100, 30, 30, 0.7);
+            border: none;
+            color: #d4c0b0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: all var(--transition-fast);
+        }
+        .search-clear-btn.visible {
+            display: flex;
+        }
+        .search-clear-btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(18, 4, 4, 0.97);
+            border: 1px solid rgba(140, 40, 40, 0.6);
+            border-radius: var(--radius-md);
+            margin-top: 8px;
+            max-height: 340px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+        }
+        .search-suggestions.active {
+            display: block;
+        }
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            border-bottom: 1px solid rgba(60, 15, 15, 0.4);
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover,
+        .suggestion-item:focus-visible {
+            background: rgba(60, 15, 15, 0.6);
+            outline: none;
+        }
+        .suggestion-poster {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(40, 10, 10, 0.8);
+            border: 1.5px solid rgba(140, 40, 40, 0.5);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #9a7a6a;
+            overflow: hidden;
+        }
+        .suggestion-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .suggestion-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .suggestion-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f0e6dc;
+        }
+        .suggestion-year {
+            font-size: 0.78rem;
+            color: #9a7a6a;
+        }
+        .search-no-results {
+            padding: 20px;
+            text-align: center;
+            color: #9a7a6a;
+            font-size: 0.95rem;
+        }
+
+        /* ============ CATEGORIES ============ */
+        .categories-section {
+            margin-bottom: 28px;
+        }
+        .categories-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e0d4c8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .categories-scroll {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(25, 6, 6, 0.8);
+            border: 1.5px solid rgba(120, 30, 30, 0.45);
+            color: #d4bfb0;
+            padding: 9px 18px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all var(--transition-smooth);
+            user-select: none;
+            font-family: var(--font-main);
+        }
+        .category-pill:hover {
+            background: rgba(50, 12, 12, 0.8);
+            border-color: var(--accent-red);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(180, 30, 30, 0.3);
+        }
+        .category-pill:focus-visible {
+            outline: 2px solid var(--accent-red-glow);
+            outline-offset: 2px;
+        }
+        .category-pill.active {
+            background: rgba(140, 25, 25, 0.7);
+            border-color: var(--accent-red-glow);
+            color: #fff;
+            box-shadow: 0 0 22px rgba(200, 35, 35, 0.45);
+            font-weight: 700;
+        }
+
+        /* ============ SORT & TOOLS ============ */
+        .tools-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 14px 18px;
+            background: rgba(18, 4, 4, 0.7);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(100, 25, 25, 0.35);
+        }
+        .tools-bar .section-heading {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f0e6dc;
+            margin: 0;
+        }
+        .tools-bar .section-desc {
+            font-size: 0.85rem;
+            color: #9a7a6a;
+            margin: 0;
+        }
+        .sort-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .sort-select {
+            background: rgba(30, 8, 8, 0.9);
+            border: 1px solid rgba(120, 30, 30, 0.5);
+            color: #e0d4c8;
+            padding: 8px 14px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .sort-select:focus-visible {
+            outline: 2px solid var(--accent-red-glow);
+            outline-offset: 2px;
+        }
+        .results-count {
+            font-size: 0.85rem;
+            color: #b5a59a;
+            white-space: nowrap;
+        }
+
+        /* ============ MOVIE GRID ============ */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(100, 25, 25, 0.4);
+            overflow: visible;
+            position: relative;
+            transition: all var(--transition-smooth);
+            cursor: pointer;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
+        .movie-card:hover {
+            transform: translateY(-8px) scale(1.025);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), var(--shadow-glow);
+            border-color: rgba(180, 40, 40, 0.7);
+        }
+        .movie-card:focus-within {
+            outline: 2px solid var(--accent-red-glow);
+            outline-offset: 3px;
+        }
+        .card-poster-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1a0505, #2d0a0a);
+            border: 3px solid var(--border-red);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(160, 30, 30, 0.3);
+            transition: all var(--transition-smooth);
+        }
+        .movie-card:hover .card-poster-circle {
+            border-color: var(--accent-gold);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 30px rgba(200, 50, 20, 0.5);
+        }
+        .card-poster-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+        .poster-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: #8a6050;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 6px;
+        }
+        .poster-placeholder i {
+            font-size: 1.8rem;
+            color: #6b3a2a;
+        }
+        .card-body {
+            text-align: center;
+            padding: 10px 16px 6px;
+            width: 100%;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #f0e6dc;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .card-meta {
+            font-size: 0.8rem;
+            color: #b5a59a;
+            margin-bottom: 6px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card-genre-tag {
+            display: inline-block;
+            background: rgba(100, 20, 20, 0.5);
+            color: #e8c8b0;
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .card-rating-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .rating-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #f0c060;
+        }
+        .rating-badge i {
+            color: #f0c060;
+            font-size: 0.8rem;
+        }
+        .horror-level {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #e07050;
+        }
+        .horror-level i {
+            color: #c0392b;
+            font-size: 0.75rem;
+        }
+        .age-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        .age-badge.age-13 {
+            background: #5c3000;
+            color: #f0b860;
+            border: 1.5px solid #f0b860;
+        }
+        .age-badge.age-16 {
+            background: #4a1500;
+            color: #f08040;
+            border: 1.5px solid #f08040;
+        }
+        .age-badge.age-18 {
+            background: #3d0000;
+            color: #f04040;
+            border: 1.5px solid #f04040;
+        }
+        .card-duration {
+            font-size: 0.78rem;
+            color: #9a7a6a;
+            margin: 4px 0;
+        }
+        .card-teaser {
+            font-size: 0.8rem;
+            color: #b5a59a;
+            margin: 6px 0 10px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-sm {
+            padding: 7px 14px;
+            border-radius: var(--radius-pill);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all var(--transition-fast);
+            font-family: var(--font-main);
+            white-space: nowrap;
+        }
+        .btn-details {
+            background: rgba(140, 30, 30, 0.7);
+            color: #fff;
+            border-color: rgba(180, 40, 40, 0.6);
+        }
+        .btn-details:hover {
+            background: var(--accent-red);
+            box-shadow: 0 0 14px rgba(200, 40, 40, 0.5);
+        }
+        .btn-fav {
+            background: rgba(30, 8, 8, 0.8);
+            color: #d4bfb0;
+            border-color: rgba(120, 30, 30, 0.5);
+        }
+        .btn-fav:hover,
+        .btn-fav.favorited {
+            background: rgba(180, 30, 30, 0.6);
+            color: #fff;
+            border-color: var(--accent-red-glow);
+        }
+        .btn-trailer {
+            background: transparent;
+            color: #d4bfb0;
+            border-color: rgba(140, 100, 40, 0.6);
+        }
+        .btn-trailer:hover {
+            background: rgba(100, 60, 10, 0.5);
+            color: #f0d080;
+            border-color: var(--accent-gold);
+        }
+
+        /* ============ SKELETON ============ */
+        .skeleton-card {
+            background: rgba(20, 6, 6, 0.7);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(80, 20, 20, 0.3);
+            padding-top: 50px;
+            padding-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: skeleton-pulse 1.6s infinite ease-in-out;
+        }
+        .skeleton-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: rgba(40, 12, 12, 0.6);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .skeleton-line {
+            height: 14px;
+            border-radius: 6px;
+            background: rgba(40, 12, 12, 0.5);
+            margin: 6px 0;
+            width: 60%;
+        }
+        .skeleton-line.short {
+            width: 35%;
+        }
+        .skeleton-line.xshort {
+            width: 25%;
+        }
+        @keyframes skeleton-pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.85;
+            }
+        }
+
+        /* ============ LOAD MORE ============ */
+        .load-more-wrap {
+            text-align: center;
+            margin: 20px 0 40px;
+        }
+        .btn-load-more {
+            background: rgba(140, 30, 30, 0.6);
+            color: #fff;
+            border: 2px solid rgba(180, 40, 40, 0.6);
+            padding: 13px 36px;
+            border-radius: var(--radius-pill);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-main);
+            transition: all var(--transition-smooth);
+            letter-spacing: 0.5px;
+        }
+        .btn-load-more:hover {
+            background: var(--accent-red);
+            box-shadow: 0 0 24px rgba(200, 40, 40, 0.55);
+            border-color: var(--accent-red-glow);
+        }
+
+        /* ============ ASIDE ============ */
+        .aside-card {
+            background: rgba(14, 3, 3, 0.85);
+            border: 1px solid rgba(120, 30, 30, 0.45);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+        .aside-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #f0e6dc;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .aside-movie-item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(80, 20, 20, 0.35);
+            transition: background var(--transition-fast);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+        }
+        .aside-movie-item:last-child {
+            border-bottom: none;
+        }
+        .aside-movie-item:hover {
+            background: rgba(40, 10, 10, 0.5);
+        }
+        .aside-poster-sm {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(30, 8, 8, 0.8);
+            border: 2px solid rgba(120, 30, 30, 0.5);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #7a5a4a;
+            overflow: hidden;
+        }
+        .aside-poster-sm img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .aside-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .aside-info .aside-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #f0e6dc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .aside-info .aside-date {
+            font-size: 0.75rem;
+            color: #9a7a6a;
+        }
+        .aside-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+        .badge-now {
+            background: #2d6a1e;
+            color: #c0f0a0;
+            border: 1px solid #4a9a2e;
+        }
+        .badge-soon {
+            background: #5c3000;
+            color: #f0c060;
+            border: 1px solid #b88020;
+        }
+        .countdown-text {
+            font-size: 0.75rem;
+            color: #d4a040;
+            font-weight: 600;
+        }
+        .btn-view-all {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #d4bfb0;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: var(--radius-pill);
+            background: rgba(40, 10, 10, 0.5);
+            transition: all var(--transition-fast);
+        }
+        .btn-view-all:hover {
+            background: rgba(100, 25, 25, 0.6);
+            color: #fff;
+        }
+
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-smooth), visibility var(--transition-smooth);
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #140404;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(140, 35, 35, 0.6);
+            max-width: 750px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 60px rgba(180, 30, 30, 0.35);
+        }
+        .modal-close {
+            position: sticky;
+            top: 12px;
+            float: left;
+            z-index: 10;
+            background: rgba(20, 0, 0, 0.85);
+            border: 1px solid rgba(160, 40, 40, 0.6);
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            transition: all var(--transition-fast);
+        }
+        .modal-close:hover {
+            background: var(--accent-red);
+            box-shadow: 0 0 16px rgba(200, 40, 40, 0.5);
+        }
+        .modal-backdrop-area {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(180deg, #1a0404 0%, #2d0808 50%, #140404 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .modal-backdrop-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+        }
+        .modal-backdrop-placeholder {
+            color: #6b3a2a;
+            font-size: 2.5rem;
+            z-index: 1;
+        }
+        .modal-backdrop-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10, 0, 0, 0.5) 0%, rgba(20, 4, 4, 0.85) 100%);
+            z-index: 1;
+        }
+        .modal-body {
+            padding: 20px 24px;
+            position: relative;
+            z-index: 2;
+        }
+        .modal-body h2 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #f0e6dc;
+            margin-bottom: 4px;
+        }
+        .modal-body .modal-original {
+            font-size: 0.9rem;
+            color: #9a7a6a;
+            margin-bottom: 12px;
+        }
+        .modal-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 14px 0;
+        }
+        .modal-meta-item {
+            background: rgba(25, 6, 6, 0.6);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(100, 20, 20, 0.35);
+        }
+        .modal-meta-item strong {
+            display: block;
+            font-size: 0.7rem;
+            color: #9a7a6a;
+            margin-bottom: 2px;
+        }
+        .modal-meta-item span {
+            font-weight: 700;
+            color: #f0e6dc;
+            font-size: 0.9rem;
+        }
+        .modal-synopsis {
+            margin: 16px 0;
+            line-height: 1.8;
+            color: #d4c0b0;
+            font-size: 0.95rem;
+        }
+        .modal-section {
+            margin: 16px 0;
+            padding: 14px;
+            background: rgba(20, 5, 5, 0.5);
+            border-radius: var(--radius-sm);
+            border-right: 3px solid rgba(160, 35, 35, 0.6);
+        }
+        .modal-section h4 {
+            font-weight: 800;
+            color: #f0e6dc;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+            color: #c0a898;
+            font-size: 0.85rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .modal-section ul li {
+            background: rgba(50, 12, 12, 0.5);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.78rem;
+        }
+        .rating-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 10px 0;
+        }
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #c0a898;
+        }
+        .rating-bar-row .bar-label {
+            width: 70px;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+        .rating-bar-row .bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(40, 10, 10, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .rating-bar-row .bar-fill {
+            height: 100%;
+            background: var(--accent-red);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+        .modal-rating-stars {
+            display: flex;
+            gap: 4px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .modal-rating-stars button {
+            background: rgba(30, 8, 8, 0.7);
+            border: 1px solid rgba(120, 30, 30, 0.5);
+            color: #d4bfb0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+            font-family: var(--font-main);
+        }
+        .modal-rating-stars button:hover,
+        .modal-rating-stars button.selected {
+            background: var(--accent-red);
+            color: #fff;
+            border-color: var(--accent-red-glow);
+            box-shadow: 0 0 12px rgba(200, 40, 40, 0.5);
+        }
+        .btn-watchlist {
+            display: inline-block;
+            padding: 10px 22px;
+            background: rgba(100, 60, 10, 0.6);
+            color: #f0d080;
+            border: 1px solid rgba(180, 120, 30, 0.6);
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            font-weight: 700;
+            font-family: var(--font-main);
+            transition: all var(--transition-fast);
+            margin-top: 8px;
+        }
+        .btn-watchlist:hover {
+            background: rgba(140, 80, 15, 0.7);
+            box-shadow: 0 0 16px rgba(180, 120, 30, 0.4);
+        }
+
+        /* ============ TOAST ============ */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(20, 4, 4, 0.95);
+            border: 1px solid rgba(160, 40, 40, 0.7);
+            color: #f0e6dc;
+            padding: 12px 22px;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
+            animation: toast-in 0.4s ease forwards, toast-out 0.4s ease 2.5s forwards;
+            pointer-events: auto;
+            white-space: nowrap;
+        }
+        @keyframes toast-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes toast-out {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* ============ SCROLL TO TOP ============ */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1500;
+            background: rgba(140, 30, 30, 0.8);
+            border: 1px solid rgba(180, 40, 40, 0.6);
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-smooth);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+        }
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top-btn:hover {
+            background: var(--accent-red);
+            box-shadow: 0 0 20px rgba(200, 40, 40, 0.6);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #8a7060;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 12px;
+            color: #5c2a2a;
+        }
+        .empty-state p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* ============ FOOTER ============ */
+        .site-footer {
+            background: #0a0000;
+            border-top: 1px solid rgba(120, 30, 30, 0.5);
+            padding: 30px 24px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .site-footer .footer-brand {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #f0e6dc;
+            margin-bottom: 4px;
+        }
+        .site-footer .footer-desc {
+            color: #9a7a6a;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        .site-footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 10px 0;
+            list-style: none;
+            padding: 0;
+        }
+        .site-footer .footer-links a {
+            color: #c0a898;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color var(--transition-fast);
+        }
+        .site-footer .footer-links a:hover {
+            color: #f0e6dc;
+        }
+        .site-footer .social-icons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .site-footer .social-icons a {
+            color: #8a7060;
+            font-size: 1.3rem;
+            transition: color var(--transition-fast);
+        }
+        .site-footer .social-icons a:hover {
+            color: #f0e6dc;
+        }
+        .site-footer .copyright {
+            font-size: 0.75rem;
+            color: #6b5040;
+            margin-top: 8px;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1100px) {
+            .main-layout {
+                flex-direction: column;
+                padding: 16px 12px 30px;
+            }
+            .side-aside {
+                width: 100%;
+                position: static;
+                max-height: none;
+                order: 2;
+            }
+            .main-content {
+                order: 1;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+            }
+            .movie-card {
+                padding-top: 42px;
+            }
+            .card-poster-circle {
+                width: 90px;
+                height: 90px;
+                top: -32px;
+            }
+        }
+        @media (max-width: 640px) {
+            .movies-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .movie-card {
+                padding-top: 36px;
+                padding-bottom: 14px;
+            }
+            .card-poster-circle {
+                width: 72px;
+                height: 72px;
+                top: -26px;
+                border-width: 2px;
+            }
+            .card-title {
+                font-size: 0.9rem;
+            }
+            .card-meta,
+            .card-teaser {
+                font-size: 0.7rem;
+            }
+            .btn-sm {
+                font-size: 0.68rem;
+                padding: 5px 10px;
+            }
+            .tools-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .header-actions .header-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .header-brand .brand-name {
+                font-size: 1.2rem;
+            }
+            .header-brand .brand-icon {
+                font-size: 1.4rem;
+            }
+            .site-header {
+                padding: 0 12px;
+                height: 56px;
+            }
+            :root {
+                --header-height: 56px;
+            }
+            .search-input-wrap input {
+                padding: 12px 40px 12px 42px;
+                font-size: 0.85rem;
+            }
+            .category-pill {
+                padding: 7px 13px;
+                font-size: 0.78rem;
+                gap: 3px;
+            }
+            .modal-content {
+                max-height: 90vh;
+            }
+            .modal-backdrop-area {
+                height: 160px;
+            }
+            .modal-body {
+                padding: 14px 16px;
+            }
+            .modal-body h2 {
+                font-size: 1.3rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .movies-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .movie-card {
+                padding-top: 44px;
+            }
+            .card-poster-circle {
+                width: 90px;
+                height: 90px;
+                top: -34px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="site-header" id="siteHeader" role="banner" aria-label="رأس الصفحة">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="فتح القائمة"
+        title="القائمة">&#9776;</button>
+        <a href="#" class="header-brand" aria-label="Horror Gallery — الصفحة الرئيسية">
+            <i class="fa-solid fa-skull brand-icon" aria-hidden="true"></i>
+            <span class="brand-name">Horror Gallery</span>
+        </a>
+        <div class="header-actions">
+            <button class="header-btn" id="btnFavorites" aria-label="المفضلة" title="المفضلة">
+                <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                <span class="badge-dot" id="favBadgeDot" style="display:none;"></span>
+            </button>
+            <button class="header-btn" id="btnWatchlist" aria-label="قائمة المشاهدة" title="قائمة المشاهدة">
+                <i class="fa-solid fa-bookmark" aria-hidden="true"></i>
+                <span class="badge-dot" id="wlBadgeDot" style="display:none;"></span>
+            </button>
+            <button class="header-btn" id="btnDarkMode" aria-label="تبديل الوضع الداكن" title="الوضع السينمائي">
+                <i class="fa-solid fa-moon" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN LAYOUT ==================== -->
+    <div class="main-layout">
+        <!-- Aside (Left side on desktop, after content on mobile) -->
+        <aside class="side-aside" id="sideAside" role="complementary" aria-label="قادم قريباً">
+            <div class="aside-card">
+                <h3><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> قادم قريباً في دور العرض</h3>
+                <div id="comingSoonList">
+                    <!-- Populated by JS -->
+                </div>
+                <a href="#" class="btn-view-all" aria-label="عرض كل الأفلام القادمة">عرض الكل ←</a>
+            </div>
+            <div class="aside-card">
+                <h3><i class="fa-solid fa-fire" aria-hidden="true"></i> الأعلى تقييماً هذا الأسبوع</h3>
+                <div id="topRatedAside">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent" role="main" aria-label="المحتوى الرئيسي">
+            <!-- Search -->
+            <section class="search-section" aria-label="بحث عن أفلام الرعب">
+                <div class="search-wrapper">
+                    <div class="search-input-wrap">
+                        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث عن فيلم رعب، ممثل، مخرج، أو نوع مرعب..."
+                        autocomplete="off" aria-label="حقل البحث">
+                        <button class="search-clear-btn" id="searchClearBtn" aria-label="مسح البحث" title="مسح">
+                            <i class="fa-solid fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="اقتراحات البحث"></div>
+                </div>
+            </section>
+
+            <!-- Categories -->
+            <section class="categories-section" aria-label="تصفح حسب نوع الرعب">
+                <p class="categories-title">🔍 استكشف حسب نوع الرعب</p>
+                <div class="categories-scroll" id="categoriesContainer">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Tools Bar -->
+            <div class="tools-bar" id="toolsBar">
+                <div>
+                    <h2 class="section-heading">🎬 أكثر أفلام الرعب رعباً</h2>
+                    <p class="section-desc">اكتشف أفلاماً مختارة بعناية، من الرعب النفسي الهادئ إلى الكوابيس الدموية.</p>
+                </div>
+                <div class="sort-group">
+                    <span class="results-count" id="resultsCount">عرض 30 فيلماً من أصل 30 فيلماً</span>
+                    <select class="sort-select" id="sortSelect" aria-label="ترتيب الأفلام">
+                        <option value="rating-desc">الأعلى تقييماً</option>
+                        <option value="year-desc">الأحدث</option>
+                        <option value="popularity">الأكثر شعبية</option>
+                        <option value="horror-desc">الأكثر رعباً</option>
+                        <option value="year-asc">الأقدم</option>
+                        <option value="rating-asc">الأقل تقييماً</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Movies Grid -->
+            <div class="movies-grid" id="moviesGrid" role="list" aria-label="قائمة أفلام الرعب">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more-wrap" id="loadMoreWrap">
+                <button class="btn-load-more" id="btnLoadMore" aria-label="تحميل المزيد من الأفلام">
+                    تحميل المزيد من الأفلام <i class="fa-solid fa-ghost" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <i class="fa-solid fa-ghost" aria-hidden="true"></i>
+                <p>لم نجد شيئاً مخيفاً بهذا الاسم... جرّب بحثاً آخر.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== MODAL ==================== -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="تفاصيل الفيلم">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" id="modalClose" aria-label="إغلاق التفاصيل">
+                <i class="fa-solid fa-times" aria-hidden="true"></i>
+            </button>
+            <div class="modal-backdrop-area" id="modalBackdropArea">
+                <div class="modal-backdrop-overlay"></div>
+                <i class="fa-solid fa-film modal-backdrop-placeholder" id="modalBackdropPlaceholder" aria-hidden="true"></i>
+                <img id="modalBackdropImg" src="" alt="" style="display:none;">
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ==================== SCROLL TO TOP ==================== -->
+    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="العودة للأعلى" title="العودة للأعلى">
+        <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="site-footer" role="contentinfo" aria-label="تذييل الصفحة">
+        <div class="footer-brand">Horror Gallery</div>
+        <p class="footer-desc">وجهتك لاكتشاف وتقييم أفلام الرعب من جميع العصور والأنواع.</p>
+        <ul class="footer-links">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">الأفلام</a></li>
+            <li><a href="#">الفئات</a></li>
+            <li><a href="#">المفضلة</a></li>
+            <li><a href="#">قائمة المشاهدة</a></li>
+            <li><a href="#">من نحن</a></li>
+        </ul>
+        <div class="social-icons">
+            <a href="#" aria-label="تويتر"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+            <a href="#" aria-label="إنستغرام"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="#" aria-label="يوتيوب"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="#" aria-label="تيك توك"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+        </div>
+        <p class="copyright">&copy; 2026 Horror Gallery. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        // ==================== MOVIE DATA ====================
+        //  لإضافة صورة: ضع رابط الصورة داخل القيمة الفارغة "poster" أو "backdrop"
+        //  مثال: poster: "https://example.com/poster.jpg"
+        const movies = [{
+            id: 1,
+            title: 'همسات القبو',
+            originalTitle: 'Basement Whispers',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 42 دقيقة',
+            genre: 'Psychological',
+            rating: 8.7,
+            audienceRating: 8.4,
+            horrorLevel: 9.1,
+            ageRating: '+18',
+            synopsis: 'عندما تنتقل عائلة إلى منزل قديم، تبدأ همسات غامضة تتسرب من القبو ليلاً، وتكشف عن أسرار مدفونة منذ عقود.',
+            director: 'نادر سليم',
+            cast: ['أحمد خالد', 'ليلى مراد', 'سامر جواد'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['عنف نفسي', 'مشاهد مزعجة', 'أصوات مفاجئة'],
+            isNowShowing: false,
+            releaseDate: '2024-10-15'
+        }, {
+            id: 2,
+            title: 'المنزل رقم 13',
+            originalTitle: 'House Number 13',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 35 دقيقة',
+            genre: 'Supernatural',
+            rating: 8.2,
+            audienceRating: 7.9,
+            horrorLevel: 8.5,
+            ageRating: '+16',
+            synopsis: 'في حي هادئ، يقف المنزل رقم 13 مهجوراً، لكن كل من يدخله لا يخرج منه كما دخل.',
+            director: 'رنا العبدالله',
+            cast: ['هيثم نور', 'جنى فؤاد'],
+            country: 'لبنان',
+            language: 'العربية',
+            contentWarnings: ['ظهورات مرعبة', 'أصوات غريبة'],
+            isNowShowing: false,
+            releaseDate: '2023-06-20'
+        }, {
+            id: 3,
+            title: 'الضوء الأخير',
+            originalTitle: 'The Last Light',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 50 دقيقة',
+            genre: 'Apocalypse',
+            rating: 8.9,
+            audienceRating: 8.6,
+            horrorLevel: 8.8,
+            ageRating: '+18',
+            synopsis: 'بعد انهيار الحضارة، مجموعة من الناجين يكتشفون أن الظلام ليس أسوأ ما يختبئ في الأنقاض.',
+            director: 'كريم الرفاعي',
+            cast: ['عمرو يوسف', 'سلمى حسن', 'طارق لطفي'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['عنف شديد', 'دماء', 'مشاهد مروعة'],
+            isNowShowing: true,
+            releaseDate: '2025-01-10'
+        }, {
+            id: 4,
+            title: 'دمية منتصف الليل',
+            originalTitle: 'Midnight Doll',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2022,
+            duration: 'ساعة و 28 دقيقة',
+            genre: 'Slasher',
+            rating: 7.6,
+            audienceRating: 7.3,
+            horrorLevel: 7.9,
+            ageRating: '+16',
+            synopsis: 'دمية قديمة تُعثر عليها فتاة صغيرة تبدأ في التحرك ليلاً، تاركة وراءها سلسلة من الأحداث الدموية.',
+            director: 'منى السيد',
+            cast: ['رنا الجميل', 'يوسف عامر'],
+            country: 'المغرب',
+            language: 'العربية',
+            contentWarnings: ['دمى مرعبة', 'دماء', 'قفزات رعب'],
+            isNowShowing: false,
+            releaseDate: '2022-09-01'
+        }, {
+            id: 5,
+            title: 'النافذة السوداء',
+            originalTitle: 'The Black Window',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 47 دقيقة',
+            genre: 'Ghosts',
+            rating: 8.4,
+            audienceRating: 8.1,
+            horrorLevel: 9.0,
+            ageRating: '+18',
+            synopsis: 'كاتب رعب مشهور ينتقل إلى فندق قديم لإنهاء روايته، لكن النافذة في غرفته تطل على شيء مرعب.',
+            director: 'فادي سمعان',
+            cast: ['باسل خياط', 'نادين نجيم'],
+            country: 'سوريا',
+            language: 'العربية',
+            contentWarnings: ['رعب نفسي', 'مشاهد مزعجة للغاية', 'أصوات مفاجئة'],
+            isNowShowing: false,
+            releaseDate: '2024-03-22'
+        }, {
+            id: 6,
+            title: 'صدى المقبرة',
+            originalTitle: 'Cemetery Echo',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 39 دقيقة',
+            genre: 'Zombies',
+            rating: 7.9,
+            audienceRating: 7.6,
+            horrorLevel: 8.2,
+            ageRating: '+18',
+            synopsis: 'في ليلة اكتمال القمر، تبدأ المقبرة القديمة في إصدار صدى غريب، وسرعان ما يتبعه صعود الموتى.',
+            director: 'علاء الدين',
+            cast: ['محمد فراج', 'أسماء أبو اليزيد'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['جثث', 'دماء', 'عنف'],
+            isNowShowing: false,
+            releaseDate: '2023-11-05'
+        }, {
+            id: 7,
+            title: 'أنياب الليل',
+            originalTitle: 'Fangs of the Night',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 55 دقيقة',
+            genre: 'Vampires',
+            rating: 8.6,
+            audienceRating: 8.3,
+            horrorLevel: 8.7,
+            ageRating: '+18',
+            synopsis: 'في مدينة أوروبية قديمة، يستيقظ سلالة من مصاصي الدماء بعد قرون من السبات، ويبدأون في البحث عن دماء جديدة.',
+            director: 'لينا خوري',
+            cast: ['قصي خولي', 'ديمة قندلفت'],
+            country: 'لبنان',
+            language: 'العربية',
+            contentWarnings: ['دماء', 'مشاهد مصاصي دماء', 'عنف'],
+            isNowShowing: true,
+            releaseDate: '2025-02-14'
+        }, {
+            id: 8,
+            title: 'الغرفة 237',
+            originalTitle: 'Room 237',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2021,
+            duration: 'ساعة و 31 دقيقة',
+            genre: 'Psychological',
+            rating: 7.8,
+            audienceRating: 7.5,
+            horrorLevel: 8.0,
+            ageRating: '+16',
+            synopsis: 'نزيل في فندق منعزل يبدأ بفقدان عقله تدريجياً عندما يكتشف أن الغرفة 237 تخفي سراً مرعباً.',
+            director: 'وسام بركات',
+            cast: ['أحمد مالك', 'هند صبري'],
+            country: 'تونس',
+            language: 'العربية',
+            contentWarnings: ['رعب نفسي', 'هلوسات'],
+            isNowShowing: false,
+            releaseDate: '2021-07-18'
+        }, {
+            id: 9,
+            title: 'صياد الظلال',
+            originalTitle: 'Shadow Hunter',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 44 دقيقة',
+            genre: 'Monsters',
+            rating: 8.1,
+            audienceRating: 7.8,
+            horrorLevel: 8.4,
+            ageRating: '+16',
+            synopsis: 'في غابة كثيفة، مخلوق غامض يطارد كل من يدخل منطقته، تاركاً وراءه آثاراً غريبة.',
+            director: 'جهاد سعد',
+            cast: ['منذر رياحنة', 'صبا مبارك'],
+            country: 'الأردن',
+            language: 'العربية',
+            contentWarnings: ['مخلوقات مرعبة', 'مطاردات'],
+            isNowShowing: false,
+            releaseDate: '2024-06-30'
+        }, {
+            id: 10,
+            title: 'طقوس منسية',
+            originalTitle: 'Forgotten Rituals',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 48 دقيقة',
+            genre: 'Supernatural',
+            rating: 8.5,
+            audienceRating: 8.2,
+            horrorLevel: 9.2,
+            ageRating: '+18',
+            synopsis: 'عالم آثار يكتشف مخطوطة قديمة تصف طقوساً منسية، وعندما يحاول فك رموزها، يطلق قوى خارقة للطبيعة.',
+            director: 'ريما العلي',
+            cast: ['باسم ياخور', 'كاريس بشار'],
+            country: 'سوريا',
+            language: 'العربية',
+            contentWarnings: ['طقوس شيطانية', 'رعب خارق', 'مشاهد مزعجة'],
+            isNowShowing: false,
+            releaseDate: '2023-12-01'
+        }, {
+            id: 11,
+            title: 'الجسر الملعون',
+            originalTitle: 'The Cursed Bridge',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2022,
+            duration: 'ساعة و 33 دقيقة',
+            genre: 'Ghosts',
+            rating: 7.4,
+            audienceRating: 7.1,
+            horrorLevel: 7.8,
+            ageRating: '+13',
+            synopsis: 'أسطورة محلية تقول إن جسراً قديماً في قرية نائية مسكون بأرواح الذين ماتوا عليه.',
+            director: 'نور الدين',
+            cast: ['أحمد داش', 'مايان السيد'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['أشباح', 'أجواء مخيفة'],
+            isNowShowing: false,
+            releaseDate: '2022-04-12'
+        }, {
+            id: 12,
+            title: 'الطابق السفلي',
+            originalTitle: 'The Downstairs',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 51 دقيقة',
+            genre: 'Gore',
+            rating: 8.3,
+            audienceRating: 8.0,
+            horrorLevel: 9.4,
+            ageRating: '+18',
+            synopsis: 'محقق جنائي ينزل إلى الطابق السفلي من مستشفى مهجور ليجد مشاهد تفوق أسوأ كوابيسه.',
+            director: 'هاني خليفة',
+            cast: ['آسر ياسين', 'منة شلبي'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['دماء غزيرة', 'مشاهد تقطيع', 'عنف مفرط'],
+            isNowShowing: false,
+            releaseDate: '2025-08-20'
+        }, {
+            id: 13,
+            title: 'عيون في الظلام',
+            originalTitle: 'Eyes in the Dark',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 37 دقيقة',
+            genre: 'Survival',
+            rating: 8.0,
+            audienceRating: 7.7,
+            horrorLevel: 8.1,
+            ageRating: '+16',
+            synopsis: 'مجموعة أصدقاء في رحلة تخييم يدركون أنهم ليسوا وحدهم في الغابة عندما تبدأ عيون متوهجة بمراقبتهم.',
+            director: 'سامح عبد العزيز',
+            cast: ['أمير كرارة', 'غادة عادل'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['مطاردة', 'توتر مستمر', 'مخلوقات'],
+            isNowShowing: false,
+            releaseDate: '2024-09-14'
+        }, {
+            id: 14,
+            title: 'المرآة المحطمة',
+            originalTitle: 'The Shattered Mirror',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 40 دقيقة',
+            genre: 'Psychological',
+            rating: 8.6,
+            audienceRating: 8.4,
+            horrorLevel: 8.9,
+            ageRating: '+18',
+            synopsis: 'امرأة تشتري مرآة قديمة من متجر تحف، وسرعان ما تبدأ في رؤية انعكاسات لأشياء لم تحدث بعد.',
+            director: 'مريم الأحمد',
+            cast: ['نيللي كريم', 'ظافر العابدين'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['رعب نفسي عميق', 'تشويش بصري'],
+            isNowShowing: false,
+            releaseDate: '2023-03-08'
+        }, {
+            id: 15,
+            title: 'التابوت الأحمر',
+            originalTitle: 'The Red Coffin',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 46 دقيقة',
+            genre: 'Vampires',
+            rating: 8.8,
+            audienceRating: 8.5,
+            horrorLevel: 9.0,
+            ageRating: '+18',
+            synopsis: 'أثناء أعمال حفر في مدينة تاريخية، يُكتشف تابوت أحمر غامض، وعند فتحه يبدأ الرعب الحقيقي.',
+            director: 'زياد دويري',
+            cast: ['نادين لبكي', 'عادل كرم'],
+            country: 'لبنان',
+            language: 'العربية',
+            contentWarnings: ['دماء', 'مصاصو دماء', 'رعب قوطي'],
+            isNowShowing: true,
+            releaseDate: '2025-05-30'
+        }, {
+            id: 16,
+            title: 'همس الأشجار',
+            originalTitle: 'Whisper of the Trees',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2022,
+            duration: 'ساعة و 34 دقيقة',
+            genre: 'Survival',
+            rating: 7.5,
+            audienceRating: 7.2,
+            horrorLevel: 7.6,
+            ageRating: '+13',
+            synopsis: 'عائلة تضيع في غابة قديمة حيث تهمس الأشجار بأسرار مرعبة وتقودهم إلى مكان مجهول.',
+            director: 'خالد مرعي',
+            cast: ['أحمد حلمي', 'دنيا سمير غانم'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['أجواء مخيفة', 'غموض'],
+            isNowShowing: false,
+            releaseDate: '2022-10-31'
+        }, {
+            id: 17,
+            title: 'الطبيب المجنون',
+            originalTitle: 'The Mad Doctor',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 43 دقيقة',
+            genre: 'Gore',
+            rating: 7.9,
+            audienceRating: 7.6,
+            horrorLevel: 8.6,
+            ageRating: '+18',
+            synopsis: 'جراح لامع يفقد عقله بعد حادث مأساوي ويبدأ في إجراء تجارب مرعبة على مرضاه.',
+            director: 'مروان حامد',
+            cast: ['خالد النبوي', 'يسرا'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['عمليات جراحية مرعبة', 'دماء', 'تعذيب'],
+            isNowShowing: false,
+            releaseDate: '2024-11-11'
+        }, {
+            id: 18,
+            title: 'لعنة الفرعون',
+            originalTitle: 'Curse of the Pharaoh',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 49 دقيقة',
+            genre: 'Supernatural',
+            rating: 8.3,
+            audienceRating: 8.0,
+            horrorLevel: 8.5,
+            ageRating: '+16',
+            synopsis: 'فريق من علماء الآثار يوقظ لعنة فرعونية قديمة أثناء التنقيب في مقبرة لم تُكتشف من قبل.',
+            director: 'شريف عرفة',
+            cast: ['كريم عبد العزيز', 'ياسمين صبري'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['لعنة', 'مومياوات', 'أجواء مخيفة'],
+            isNowShowing: false,
+            releaseDate: '2023-08-15'
+        }, {
+            id: 19,
+            title: 'صمت المقبرة',
+            originalTitle: 'Silence of the Graveyard',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 38 دقيقة',
+            genre: 'Zombies',
+            rating: 8.1,
+            audienceRating: 7.8,
+            horrorLevel: 8.3,
+            ageRating: '+18',
+            synopsis: 'في ليلة شتوية، يكتشف حارس مقبرة أن الموتى لا يبقون صامتين إلى الأبد.',
+            director: 'بيتر ميمي',
+            cast: ['أحمد عز', 'هند سلامة'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['زومبي', 'دماء', 'رعب'],
+            isNowShowing: false,
+            releaseDate: '2025-12-05'
+        }, {
+            id: 20,
+            title: 'الباب المغلق',
+            originalTitle: 'The Locked Door',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 30 دقيقة',
+            genre: 'Psychological',
+            rating: 8.4,
+            audienceRating: 8.2,
+            horrorLevel: 8.7,
+            ageRating: '+16',
+            synopsis: 'شاب يستأجر شقة رخيصة ليكتشف أن هناك باباً مغلقاً لا يمكن فتحه، لكنه يسمع أصواتاً قادمة من خلفه.',
+            director: 'تامر محسن',
+            cast: ['أحمد داش', 'ريهام عبد الغفور'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['توتر نفسي', 'غموض', 'أصوات'],
+            isNowShowing: false,
+            releaseDate: '2024-07-07'
+        }, {
+            id: 21,
+            title: 'الذئب الأخير',
+            originalTitle: 'The Last Wolf',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 52 دقيقة',
+            genre: 'Monsters',
+            rating: 8.0,
+            audienceRating: 7.7,
+            horrorLevel: 8.2,
+            ageRating: '+16',
+            synopsis: 'في قرية جبلية نائية، يظهر ذئب ضخم لم يُرَ مثله من قبل، ويهاجم السكان ليلاً.',
+            director: 'علي إدريس',
+            cast: ['فتحي عبد الوهاب', 'داليا مصطفى'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['مخلوقات', 'هجمات', 'دماء'],
+            isNowShowing: false,
+            releaseDate: '2023-01-25'
+        }, {
+            id: 22,
+            title: 'الضيوف غير المدعوين',
+            originalTitle: 'Uninvited Guests',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 41 دقيقة',
+            genre: 'Slasher',
+            rating: 7.8,
+            audienceRating: 7.4,
+            horrorLevel: 8.0,
+            ageRating: '+18',
+            synopsis: 'حفل عشاء أنيق يتحول إلى مذبحة عندما يصل ضيوف غير مدعوين بأقنعة مخيفة.',
+            director: 'هالة خليل',
+            cast: ['منة شلبي', 'إياد نصار'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['عنف', 'مطاردة', 'دماء'],
+            isNowShowing: true,
+            releaseDate: '2025-07-18'
+        }, {
+            id: 23,
+            title: 'أرواح القرية',
+            originalTitle: 'Spirits of the Village',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2022,
+            duration: 'ساعة و 36 دقيقة',
+            genre: 'Ghosts',
+            rating: 7.3,
+            audienceRating: 7.0,
+            horrorLevel: 7.5,
+            ageRating: '+13',
+            synopsis: 'قرية بأكملها تؤمن بأن الأرواح تعيش بينهم، وغريب يحاول كشف الحقيقة.',
+            director: 'عمر عبد العزيز',
+            cast: ['محمد رمضان', 'ياسمين رئيس'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['أشباح', 'أساطير'],
+            isNowShowing: false,
+            releaseDate: '2022-05-20'
+        }, {
+            id: 24,
+            title: 'حافة الهاوية',
+            originalTitle: 'Edge of the Abyss',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 45 دقيقة',
+            genre: 'Apocalypse',
+            rating: 8.7,
+            audienceRating: 8.5,
+            horrorLevel: 9.0,
+            ageRating: '+18',
+            synopsis: 'العالم على حافة الانهيار، ومجموعة من الغرباء يجب أن يتحدوا لمواجهة كارثة كونية مرعبة.',
+            director: 'أحمد خالد موسى',
+            cast: ['عمرو سعد', 'درة'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['كوارث', 'مشاهد نهاية العالم', 'عنف'],
+            isNowShowing: false,
+            releaseDate: '2024-12-25'
+        }, {
+            id: 25,
+            title: 'الرعب الكوري',
+            originalTitle: 'Korean Terror',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 54 دقيقة',
+            genre: 'Asian Horror',
+            rating: 9.0,
+            audienceRating: 8.8,
+            horrorLevel: 9.5,
+            ageRating: '+18',
+            synopsis: 'فيلم رعب مستوحى من الأساطير الكورية عن شبح امرأة تبحث عن الانتقام في شقة حديثة في سيول.',
+            director: 'بارك تشان-ووك',
+            cast: ['لي جونغ-سوك', 'كيم تاي-ري'],
+            country: 'كوريا الجنوبية',
+            language: 'الكورية',
+            contentWarnings: ['رعب آسيوي', 'أشباح', 'مشاهد مزعجة للغاية'],
+            isNowShowing: false,
+            releaseDate: '2025-04-10'
+        }, {
+            id: 26,
+            title: 'المختبر السري',
+            originalTitle: 'The Secret Lab',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 47 دقيقة',
+            genre: 'Gore',
+            rating: 7.7,
+            audienceRating: 7.4,
+            horrorLevel: 8.4,
+            ageRating: '+18',
+            synopsis: 'صحفي استقصائي يكتشف مختبراً سرياً تجري فيه تجارب مرعبة على البشر.',
+            director: 'سعيد حامد',
+            cast: ['آسر ياسين', 'بشرى'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['تجارب بشرية', 'دماء', 'تعذيب'],
+            isNowShowing: false,
+            releaseDate: '2023-02-28'
+        }, {
+            id: 27,
+            title: 'ليلة بلا قمر',
+            originalTitle: 'Moonless Night',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 32 دقيقة',
+            genre: 'Classic',
+            rating: 8.5,
+            audienceRating: 8.3,
+            horrorLevel: 8.6,
+            ageRating: '+16',
+            synopsis: 'تحية لأفلام الرعب الكلاسيكية بالأبيض والأسود، قصة عن منزل مسكون في ليلة بلا قمر.',
+            director: 'يوسف شاهين',
+            cast: ['عمر الشريف', 'فاتن حمامة'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['أجواء كلاسيكية', 'أشباح'],
+            isNowShowing: false,
+            releaseDate: '2024-01-01'
+        }, {
+            id: 28,
+            title: 'الحفرة',
+            originalTitle: 'The Pit',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 40 دقيقة',
+            genre: 'Survival',
+            rating: 8.2,
+            audienceRating: 7.9,
+            horrorLevel: 8.8,
+            ageRating: '+18',
+            synopsis: 'مجموعة عمال مناجم يكتشفون حفرة عميقة تحت الأرض تؤدي إلى عالم مرعب لم يسبق لأحد رؤيته.',
+            director: 'محمد دياب',
+            cast: ['محمد ممدوح', 'أمينة خليل'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['مكان ضيق', 'مخلوقات تحت الأرض', 'رعب'],
+            isNowShowing: true,
+            releaseDate: '2025-09-30'
+        }, {
+            id: 29,
+            title: 'اللمسة الباردة',
+            originalTitle: 'The Cold Touch',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2023,
+            duration: 'ساعة و 29 دقيقة',
+            genre: 'Supernatural',
+            rating: 7.6,
+            audienceRating: 7.3,
+            horrorLevel: 7.9,
+            ageRating: '+16',
+            synopsis: 'ممرضة في مستشفى قديم تشعر بلمسة باردة على كتفها في كل مرة تكون فيها وحيدة في الممر.',
+            director: 'ساندرا نشأت',
+            cast: ['هند صبري', 'باسم سمرة'],
+            country: 'تونس',
+            language: 'العربية',
+            contentWarnings: ['أشباح', 'مستشفى', 'أجواء مخيفة'],
+            isNowShowing: false,
+            releaseDate: '2023-06-06'
+        }, {
+            id: 30,
+            title: 'الصرخة الخرساء',
+            originalTitle: 'The Silent Scream',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 53 دقيقة',
+            genre: 'Modern Horror',
+            rating: 9.1,
+            audienceRating: 8.9,
+            horrorLevel: 9.6,
+            ageRating: '+18',
+            synopsis: 'في عالم مستقبلي، تكنولوجيا جديدة تسمح للناس بتسجيل أحلامهم، لكن أحدهم يسجل كابوساً لا يمكن الهروب منه.',
+            director: 'أحمد مراد',
+            cast: ['كريم فهمي', 'نور'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['رعب تكنولوجي', 'كوابيس', 'مشاهد مزعجة للغاية', 'قفزات رعب'],
+            isNowShowing: false,
+            releaseDate: '2024-08-08'
+        }, {
+            id: 31,
+            title: 'عودة المهرج',
+            originalTitle: 'Return of the Clown',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2025,
+            duration: 'ساعة و 48 دقيقة',
+            genre: 'Slasher',
+            rating: 7.9,
+            audienceRating: 7.5,
+            horrorLevel: 8.3,
+            ageRating: '+18',
+            synopsis: 'بعد 20 عاماً من اختفائه، يعود مهرج غامض إلى بلدة صغيرة ليبدأ دورة جديدة من الرعب.',
+            director: 'رامي إمام',
+            cast: ['أحمد السقا', 'غادة عبد الرازق'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['مهرج مرعب', 'عنف', 'دماء'],
+            isNowShowing: true,
+            releaseDate: '2025-10-31'
+        }, {
+            id: 32,
+            title: 'الظل الطويل',
+            originalTitle: 'The Long Shadow',
+            poster: '',
+            backdrop: '',
+            releaseYear: 2024,
+            duration: 'ساعة و 42 دقيقة',
+            genre: 'Modern Horror',
+            rating: 8.8,
+            audienceRating: 8.6,
+            horrorLevel: 9.2,
+            ageRating: '+18',
+            synopsis: 'محقق في جرائم غامضة يطارد قاتلاً متسلسلاً يترك وراءه ظلالاً غريبة في مسرح الجريمة.',
+            director: 'بيتر ميمي',
+            cast: ['أحمد عز', 'منى زكي'],
+            country: 'مصر',
+            language: 'العربية',
+            contentWarnings: ['جرائم', 'مشاهد تحقيق', 'رعب نفسي'],
+            isNowShowing: false,
+            releaseDate: '2024-04-17'
+        }];
+
+        // ==================== CATEGORIES CONFIG ====================
+        const categories = [
+            { label: 'أفلام الأشباح 👻', genre: 'Ghosts' },
+            { label: 'أفلام الزومبي 🧟‍♀️', genre: 'Zombies' },
+            { label: 'أفلام مصاصي الدماء 🧛🏻‍♀️', genre: 'Vampires' },
+            { label: 'أفلام القاتل المتسلسل 🔪', genre: 'Slasher' },
+            { label: 'أفلام نهاية العالم 🌋', genre: 'Apocalypse' },
+            { label: 'الرعب النفسي 🧠', genre: 'Psychological' },
+            { label: 'الرعب الخارق 🕯️', genre: 'Supernatural' },
+            { label: 'رعب دموي 🩸', genre: 'Gore' },
+            { label: 'رعب البقاء 🏚️', genre: 'Survival' },
+            { label: 'الوحوش والمخلوقات 🐺', genre: 'Monsters' },
+            { label: 'الرعب الكوري والآسيوي 🎎', genre: 'Asian Horror' },
+            { label: 'أفلام كلاسيكية 🎞️', genre: 'Classic' },
+            { label: 'الرعب الحديث 🔥', genre: 'Modern Horror' },
+        ];
+
+        // ==================== STATE ====================
+        let filteredMovies = [...movies];
+        let displayedCount = 30;
+        const PER_PAGE = 9;
+        let activeCategory = null;
+        let currentSort = 'rating-desc';
+        let favorites = JSON.parse(localStorage.getItem('horrorGallery_favorites') || '[]');
+        let watchlist = JSON.parse(localStorage.getItem('horrorGallery_watchlist') || '[]');
+        let userRatings = JSON.parse(localStorage.getItem('horrorGallery_userRatings') || '{}');
+
+        // ==================== DOM REFS ====================
+        const $moviesGrid = document.getElementById('moviesGrid');
+        const $searchInput = document.getElementById('searchInput');
+        const $searchClearBtn = document.getElementById('searchClearBtn');
+        const $searchSuggestions = document.getElementById('searchSuggestions');
+        const $categoriesContainer = document.getElementById('categoriesContainer');
+        const $sortSelect = document.getElementById('sortSelect');
+        const $resultsCount = document.getElementById('resultsCount');
+        const $btnLoadMore = document.getElementById('btnLoadMore');
+        const $loadMoreWrap = document.getElementById('loadMoreWrap');
+        const $emptyState = document.getElementById('emptyState');
+        const $modalOverlay = document.getElementById('modalOverlay');
+        const $modalBody = document.getElementById('modalBody');
+        const $modalClose = document.getElementById('modalClose');
+        const $modalBackdropArea = document.getElementById('modalBackdropArea');
+        const $modalBackdropPlaceholder = document.getElementById(
+        'modalBackdropPlaceholder');
+        const $modalBackdropImg = document.getElementById('modalBackdropImg');
+        const $toastContainer = document.getElementById('toastContainer');
+        const $scrollTopBtn = document.getElementById('scrollTopBtn');
+        const $siteHeader = document.getElementById('siteHeader');
+        const $comingSoonList = document.getElementById('comingSoonList');
+        const $topRatedAside = document.getElementById('topRatedAside');
+        const $favBadgeDot = document.getElementById('favBadgeDot');
+        const $wlBadgeDot = document.getElementById('wlBadgeDot');
+        const $btnFavorites = document.getElementById('btnFavorites');
+        const $btnWatchlist = document.getElementById('btnWatchlist');
+        const $btnDarkMode = document.getElementById('btnDarkMode');
+        const $mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const $sideAside = document.getElementById('sideAside');
+
+        // ==================== UTILS ====================
+        function saveFavorites() {
+            localStorage.setItem('horrorGallery_favorites', JSON.stringify(favorites));
+            updateBadgeDots();
+        }
+
+        function saveWatchlist() {
+            localStorage.setItem('horrorGallery_watchlist', JSON.stringify(watchlist));
+            updateBadgeDots();
+        }
+
+        function saveUserRatings() {
+            localStorage.setItem('horrorGallery_userRatings', JSON.stringify(userRatings));
+        }
+
+        function updateBadgeDots() {
+            $favBadgeDot.style.display = favorites.length > 0 ? 'block' : 'none';
+            $wlBadgeDot.style.display = watchlist.length > 0 ? 'block' : 'none';
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            $toastContainer.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 3000);
+        }
+
+        function isFavorited(movieId) {
+            return favorites.includes(movieId);
+        }
+
+        function isInWatchlist(movieId) {
+            return watchlist.includes(movieId);
+        }
+
+        function getUserRating(movieId) {
+            return userRatings[movieId] || null;
+        }
+
+        // ==================== POSTER PLACEHOLDER HTML ====================
+        function getPosterHTML(movie) {
+            if (movie.poster && movie.poster.trim() !== '') {
+                return `<img src="${movie.poster}" alt="${movie.title}" loading="lazy">`;
+            }
+            return `
+            <div class="poster-placeholder">
+              <i class="fa-solid fa-skull" aria-hidden="true"></i>
+              <span>Movie Image</span>
+            </div>`;
+        }
+
+        function getAsidePosterHTML(movie) {
+            if (movie.poster && movie.poster.trim() !== '') {
+                return `<img src="${movie.poster}" alt="${movie.title}" loading="lazy">`;
+            }
+            return `<i class="fa-solid fa-film" aria-hidden="true" style="font-size:1.2rem;color:#6b3a2a;"></i>`;
+        }
+
+        // ==================== AGE BADGE CLASS ====================
+        function getAgeBadgeClass(ageRating) {
+            if (ageRating.includes('18')) return 'age-18';
+            if (ageRating.includes('16')) return 'age-16';
+            return 'age-13';
+        }
+
+        // ==================== RENDER MOVIE CARD ====================
+        function createMovieCard(movie) {
+            const card = document.createElement('article');
+            card.className = 'movie-card';
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-label', `${movie.title} — تقييم ${movie.rating}`);
+            card.innerHTML = `
+            <div class="card-poster-circle">
+              ${getPosterHTML(movie)}
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${movie.title}</h3>
+              <div class="card-meta">
+                <span>${movie.releaseYear}</span>
+                <span>•</span>
+                <span>${movie.country}</span>
+              </div>
+              <span class="card-genre-tag">${movie.genre}</span>
+              <div class="card-rating-row">
+                <span class="rating-badge"><i class="fa-solid fa-star"></i> ${movie.rating}</span>
+                <span class="horror-level"><i class="fa-solid fa-droplet"></i> رعب ${movie.horrorLevel}</span>
+              </div>
+              <span class="age-badge ${getAgeBadgeClass(movie.ageRating)}">${movie.ageRating}</span>
+              <p class="card-duration">⏱️ ${movie.duration}</p>
+              <p class="card-teaser">${movie.synopsis.substring(0, 80)}...</p>
+              <div class="card-actions">
+                <button class="btn-sm btn-details" data-action="details" data-id="${movie.id}" aria-label="تفاصيل ${movie.title}">تفاصيل</button>
+                <button class="btn-sm btn-fav ${isFavorited(movie.id) ? 'favorited' : ''}" data-action="fav" data-id="${movie.id}" aria-label="${isFavorited(movie.id) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}">
+                  <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                </button>
+                <button class="btn-sm btn-trailer" data-action="trailer" data-id="${movie.id}" aria-label="مشاهدة إعلان ${movie.title}">
+                  <i class="fa-solid fa-play" aria-hidden="true"></i> إعلان
+                </button>
+              </div>
+            </div>`;
+            return card;
+        }
+
+        function createSkeletonCard() {
+            const card = document.createElement('div');
+            card.className = 'skeleton-card';
+            card.style.position = 'relative';
+            card.style.overflow = 'visible';
+            card.innerHTML = `
+            <div class="skeleton-circle"></div>
+            <div style="padding-top:55px;width:100%;display:flex;flex-direction:column;align-items:center;">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line xshort"></div>
+              <div class="skeleton-line" style="width:45%;"></div>
+              <div class="skeleton-line short"></div>
+            </div>`;
+            return card;
+        }
+
+        // ==================== RENDER GRID ====================
+        function renderMovies(movieList, append = false) {
+            if (!append) {
+                $moviesGrid.innerHTML = '';
+            }
+            if (movieList.length === 0 && !append) {
+                $moviesGrid.innerHTML = '';
+                $emptyState.style.display = 'block';
+                $loadMoreWrap.style.display = 'none';
+                $resultsCount.textContent = 'لا توجد أفلام مطابقة';
+                return;
+            }
+            $emptyState.style.display = 'none';
+            const slice = append ? movieList : movieList.slice(0, displayedCount);
+            slice.forEach(movie => {
+                $moviesGrid.appendChild(createMovieCard(movie));
+            });
+            const total = movieList.length;
+            const shown = Math.min(displayedCount, total);
+            $resultsCount.textContent = `عرض ${shown} فيلماً من أصل ${total} فيلماً`;
+            if (displayedCount >= total) {
+                $loadMoreWrap.style.display = 'none';
+            } else {
+                $loadMoreWrap.style.display = 'block';
+            }
+        }
+
+        // ==================== FILTER & SORT ====================
+        function applyFilters() {
+            let result = [...movies];
+            // Category filter
+            if (activeCategory) {
+                result = result.filter(m => m.genre === activeCategory);
+            }
+            // Search filter
+            const query = $searchInput.value.trim().toLowerCase();
+            if (query) {
+                result = result.filter(m =>
+                    m.title.toLowerCase().includes(query) ||
+                    m.originalTitle.toLowerCase().includes(query) ||
+                    m.genre.toLowerCase().includes(query) ||
+                    m.director.toLowerCase().includes(query) ||
+                    m.cast.some(c => c.toLowerCase().includes(query)) ||
+                    m.synopsis.toLowerCase().includes(query)
+                );
+            }
+            // Sort
+            switch (currentSort) {
+                case 'rating-desc':
+                    result.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'rating-asc':
+                    result.sort((a, b) => a.rating - b.rating);
+                    break;
+                case 'year-desc':
+                    result.sort((a, b) => b.releaseYear - a.releaseYear);
+                    break;
+                case 'year-asc':
+                    result.sort((a, b) => a.releaseYear - b.releaseYear);
+                    break;
+                case 'horror-desc':
+                    result.sort((a, b) => b.horrorLevel - a.horrorLevel);
+                    break;
+                case 'popularity':
+                    result.sort((a, b) => b.audienceRating - a.audienceRating);
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
+
+        function refreshDisplay(append = false) {
+            filteredMovies = applyFilters();
+            displayedCount = append ? displayedCount : PER_PAGE;
+            if (!append) displayedCount = Math.min(PER_PAGE, filteredMovies.length);
+            renderMovies(filteredMovies, append);
+        }
+
+        // ==================== LOAD MORE ====================
+        function loadMore() {
+            const prevCount = displayedCount;
+            // Show skeletons
+            const skeletonCount = Math.min(3, filteredMovies.length - displayedCount);
+            for (let i = 0; i < skeletonCount; i++) {
+                $moviesGrid.appendChild(createSkeletonCard());
+            }
+            $btnLoadMore.disabled = true;
+            $btnLoadMore.textContent = 'جارٍ التحميل...';
+            setTimeout(() => {
+                // Remove skeletons
+                const skeletons = $moviesGrid.querySelectorAll('.skeleton-card');
+                skeletons.forEach(s => s.remove());
+                displayedCount += PER_PAGE;
+                if (displayedCount > filteredMovies.length) displayedCount = filteredMovies.length;
+                renderMovies(filteredMovies, false);
+                $btnLoadMore.disabled = false;
+                $btnLoadMore.innerHTML =
+                    'تحميل المزيد من الأفلام <i class="fa-solid fa-ghost" aria-hidden="true"></i>';
+            }, 800);
+        }
+
+        // ==================== SEARCH SUGGESTIONS ====================
+        function updateSearchSuggestions() {
+            const query = $searchInput.value.trim().toLowerCase();
+            if (!query) {
+                $searchSuggestions.classList.remove('active');
+                $searchClearBtn.classList.remove('visible');
+                return;
+            }
+            $searchClearBtn.classList.add('visible');
+            const matches = movies.filter(m =>
+                m.title.toLowerCase().includes(query) ||
+                m.originalTitle.toLowerCase().includes(query) ||
+                m.genre.toLowerCase().includes(query) ||
+                m.director.toLowerCase().includes(query)
+            ).slice(0, 6);
+            if (matches.length === 0) {
+                $searchSuggestions.innerHTML =
+                    '<div class="search-no-results">لم نجد شيئاً مخيفاً بهذا الاسم... جرّب بحثاً آخر.</div>';
+            } else {
+                $searchSuggestions.innerHTML = matches.map(m => `
+              <div class="suggestion-item" data-id="${m.id}" tabindex="0" role="option" aria-label="${m.title}">
+                <div class="suggestion-poster">${getAsidePosterHTML(m)}</div>
+                <div class="suggestion-info">
+                  <span class="suggestion-title">${m.title}</span>
+                  <span class="suggestion-year">${m.releaseYear} — ${m.genre}</span>
+                </div>
+              </div>`).join('');
+            }
+            $searchSuggestions.classList.add('active');
+        }
+
+        // ==================== MODAL ====================
+        function openModal(movieId) {
+            const movie = movies.find(m => m.id === movieId);
+            if (!movie) return;
+            // Backdrop
+            if (movie.backdrop && movie.backdrop.trim() !== '') {
+                $modalBackdropImg.src = movie.backdrop;
+                $modalBackdropImg.style.display = 'block';
+                $modalBackdropPlaceholder.style.display = 'none';
+            } else {
+                $modalBackdropImg.style.display = 'none';
+                $modalBackdropPlaceholder.style.display = 'block';
+            }
+            const userRating = getUserRating(movie.id);
+            $modalBody.innerHTML = `
+            <h2>${movie.title}</h2>
+            <p class="modal-original">${movie.originalTitle} — ${movie.releaseYear}</p>
+            <div class="modal-meta-grid">
+              <div class="modal-meta-item"><strong>التقييم العام</strong><span>⭐ ${movie.rating}/10</span></div>
+              <div class="modal-meta-item"><strong>تقييم الجمهور</strong><span>👥 ${movie.audienceRating}/10</span></div>
+              <div class="modal-meta-item"><strong>مستوى الرعب</strong><span>💀 ${movie.horrorLevel}/10</span></div>
+              <div class="modal-meta-item"><strong>التصنيف العمري</strong><span class="age-badge ${getAgeBadgeClass(movie.ageRating)}">${movie.ageRating}</span></div>
+              <div class="modal-meta-item"><strong>المدة</strong><span>${movie.duration}</span></div>
+              <div class="modal-meta-item"><strong>البلد</strong><span>${movie.country}</span></div>
+              <div class="modal-meta-item"><strong>النوع</strong><span>${movie.genre}</span></div>
+              <div class="modal-meta-item"><strong>المخرج</strong><span>${movie.director}</span></div>
+            </div>
+            <p class="modal-synopsis"><strong>القصة:</strong> ${movie.synopsis}</p>
+            <p style="color:#c0a898;font-size:0.85rem;"><strong>طاقم التمثيل:</strong> ${movie.cast.join('، ')}</p>
+            <div class="modal-section">
+              <h4>🧛 لماذا قد يعجبك هذا الفيلم</h4>
+              <p style="color:#c0a898;font-size:0.85rem;">${getWhyYouMightLike(movie)}</p>
+            </div>
+            <div class="modal-section">
+              <h4>⚠️ تحذيرات المحتوى</h4>
+              <ul>${movie.contentWarnings.map(w => `<li>${w}</li>`).join('')}</ul>
+            </div>
+            <div class="modal-section">
+              <h4>📊 توزيع التقييمات</h4>
+              <div class="rating-bars">
+                <div class="rating-bar-row"><span class="bar-label">النقاد</span><div class="bar-track"><div class="bar-fill" style="width:${movie.rating * 10}%;"></div></div><span>${movie.rating}</span></div>
+                <div class="rating-bar-row"><span class="bar-label">الجمهور</span><div class="bar-track"><div class="bar-fill" style="width:${movie.audienceRating * 10}%; background:#c4944a;"></div></div><span>${movie.audienceRating}</span></div>
+                <div class="rating-bar-row"><span class="bar-label">الرعب</span><div class="bar-track"><div class="bar-fill" style="width:${movie.horrorLevel * 10}%; background:#8b0000;"></div></div><span>${movie.horrorLevel}</span></div>
+              </div>
+              <p style="color:#e07050;font-weight:700;margin-top:8px;">${getHorrorPhrase(movie.horrorLevel)}</p>
+            </div>
+            <div class="modal-section">
+              <h4>🎬 مقطع دعائي</h4>
+              <div style="background:rgba(20,5,5,0.7);border-radius:10px;padding:30px;text-align:center;color:#8a7060;">
+                <i class="fa-solid fa-play-circle" style="font-size:2.5rem;" aria-hidden="true"></i>
+                <p style="margin-top:6px;">أضف رابط الفيديو هنا لاحقاً</p>
+              </div>
+            </div>
+            <div style="margin:14px 0;">
+              <h4 style="font-weight:800;color:#f0e6dc;margin-bottom:8px;">🎯 قيّم هذا الفيلم</h4>
+              <div class="modal-rating-stars" data-movie-id="${movie.id}">
+                ${Array.from({length:10},(_,i)=>i+1).map(n => `
+                <button data-rating="${n}" class="${userRating === n ? 'selected' : ''}" aria-label="تقييم ${n} من 10">${n}</button>`).join('')}
+              </div>
+              ${userRating ? `<p style="color:#f0c060;font-size:0.85rem;margin-top:4px;">تقييمك: ${userRating}/10</p>` : ''}
+            </div>
+            <button class="btn-watchlist" data-id="${movie.id}" id="modalWatchlistBtn">
+              ${isInWatchlist(movie.id) ? '✅ في قائمة المشاهدة' : '➕ أضف إلى قائمة المشاهدة'}
+            </button>
+          `;
+            $modalOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            // Focus trap
+            setTimeout(() => $modalClose.focus(), 100);
+        }
+
+        function closeModal() {
+            $modalOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function getWhyYouMightLike(movie) {
+            const phrases = {
+                'Ghosts': 'إذا كنت من محبي قصص الأشباح والظهورات الغامضة التي تثير القشعريرة.',
+                'Zombies': 'لعشاق أفلام الموتى الأحياء والإثارة المستمرة والبقاء في مواجهة الخطر.',
+                'Vampires': 'إذا كنت مفتوناً بأساطير مصاصي الدماء والعوالم القوطية المظلمة.',
+                'Slasher': 'لمحبي الإثارة السريعة والمطاردات المليئة بالتشويق والدماء.',
+                'Apocalypse': 'إذا كنت تستمتع بقصص نهاية العالم والنجاة في مواجهة الكوارث.',
+                'Psychological': 'لعشاق الرعب الذي يتسلل إلى العقل ويزعزع الإدراك والواقع.',
+                'Supernatural': 'إذا كنت تؤمن بأن هناك قوى خارقة للطبيعة تتجاوز فهمنا.',
+                'Gore': 'للجمهور الذي يبحث عن الرعب الصريح والمشاهد الدموية المباشرة.',
+                'Survival': 'إذا كنت تحب قصص البقاء والتوتر المستمر في مواجهة المجهول.',
+                'Monsters': 'لعشاق المخلوقات الأسطورية والوحوش المرعبة.',
+                'Asian Horror': 'إذا كنت من محبي الرعب الآسيوي المليء بالأجواء الفريدة والقصص المرعبة.',
+                'Classic': 'لعشاق الأفلام الكلاسيكية التي أرست قواعد الرعب السينمائي.',
+                'Modern Horror': 'إذا كنت تبحث عن رعب معاصر بأساليب جديدة ومبتكرة.',
+            };
+            return phrases[movie.genre] ||
+                'لأن هذا الفيلم يقدم تجربة رعب فريدة تجمع بين التشويق والغموض والأجواء المرعبة.';
+        }
+
+        function getHorrorPhrase(level) {
+            if (level >= 9) return '💀 مرعب جداً — لا يُنصح بمشاهدته بمفردك أبداً.';
+            if (level >= 8) return '😱 مخيف بشدة — قد تحتاج إلى إضاءة إضافية بعد المشاهدة.';
+            if (level >= 7) return '👻 رعب متوسط — مناسب لعشاق الأجواء الغامضة والمخيفة.';
+            return '🎭 رعب خفيف — مناسب لمحبي الأجواء الغامضة والمثيرة.';
+        }
+
+        // ==================== RENDER ASIDE ====================
+        function renderComingSoon() {
+            const now = new Date();
+            const comingSoonMovies = movies.filter(m => {
+                if (!m.releaseDate) return false;
+                const rd = new Date(m.releaseDate);
+                return rd > now || m.isNowShowing;
+            }).sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate)).slice(0, 5);
+
+            $comingSoonList.innerHTML = comingSoonMovies.map(m => {
+                const rd = new Date(m.releaseDate);
+                const diffDays = Math.ceil((rd - now) / (1000 * 60 * 60 * 24));
+                const badgeHTML = m.isNowShowing ?
+                    '<span class="aside-badge badge-now">يُعرض الآن</span>' :
+                    (diffDays > 0 ?
+                        `<span class="aside-badge badge-soon">قريباً</span> <span class="countdown-text">${diffDays} يوم متبقٍ</span>` :
+                        '<span class="aside-badge badge-now">صدر حديثاً</span>');
+                return `
+              <div class="aside-movie-item" data-id="${m.id}" tabindex="0" role="button" aria-label="${m.title}">
+                <div class="aside-poster-sm">${getAsidePosterHTML(m)}</div>
+                <div class="aside-info">
+                  <span class="aside-title">${m.title}</span>
+                  <span class="aside-date">${m.releaseDate}</span>
+                  <div>${badgeHTML}</div>
+                </div>
+              </div>`;
+            }).join('');
+            if (comingSoonMovies.length === 0) {
+                $comingSoonList.innerHTML =
+                    '<p style="color:#8a7060;font-size:0.85rem;">لا توجد أفلام قادمة حالياً.</p>';
+            }
+        }
+
+        function renderTopRatedAside() {
+            const top = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 4);
+            $topRatedAside.innerHTML = top.map(m => `
+            <div class="aside-movie-item" data-id="${m.id}" tabindex="0" role="button" aria-label="${m.title}">
+              <div class="aside-poster-sm">${getAsidePosterHTML(m)}</div>
+              <div class="aside-info">
+                <span class="aside-title">${m.title}</span>
+                <span class="aside-date">⭐ ${m.rating} | ${m.releaseYear}</span>
+              </div>
+            </div>`).join('');
+        }
+
+        // ==================== RENDER CATEGORIES ====================
+        function renderCategories() {
+            $categoriesContainer.innerHTML = categories.map(c => `
+            <button class="category-pill ${activeCategory === c.genre ? 'active' : ''}" data-genre="${c.genre}" aria-label="فلترة حسب ${c.label}">
+              ${c.label}
+            </button>`).join('');
+        }
+
+        // ==================== EVENT HANDLERS ====================
+        // Search input
+        $searchInput.addEventListener('input', () => {
+            updateSearchSuggestions();
+            if ($searchInput.value.trim() === '') {
+                $searchClearBtn.classList.remove('visible');
+                $searchSuggestions.classList.remove('active');
+                refreshDisplay();
+            }
+        });
+        $searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                $searchSuggestions.classList.remove('active');
+                refreshDisplay();
+            }
+        });
+        $searchClearBtn.addEventListener('click', () => {
+            $searchInput.value = '';
+            $searchClearBtn.classList.remove('visible');
+            $searchSuggestions.classList.remove('active');
+            refreshDisplay();
+            $searchInput.focus();
+        });
+
+        // Search suggestions click
+        $searchSuggestions.addEventListener('click', (e) => {
+            const item = e.target.closest('.suggestion-item');
+            if (item) {
+                const movieId = parseInt(item.dataset.id);
+                $searchSuggestions.classList.remove('active');
+                $searchInput.value = '';
+                $searchClearBtn.classList.remove('visible');
+                openModal(movieId);
+            }
+        });
+
+        // Close suggestions on outside click
+        document.addEventListener('click', (e) => {
+            if (!$searchSuggestions.contains(e.target) && e.target !== $searchInput) {
+                $searchSuggestions.classList.remove('active');
+            }
+        });
+
+        // Categories
+        $categoriesContainer.addEventListener('click', (e) => {
+            const pill = e.target.closest('.category-pill');
+            if (!pill) return;
+            const genre = pill.dataset.genre;
+            if (activeCategory === genre) {
+                activeCategory = null;
+            } else {
+                activeCategory = genre;
+            }
+            renderCategories();
+            refreshDisplay();
+        });
+
+        // Sort
+        $sortSelect.addEventListener('change', () => {
+            currentSort = $sortSelect.value;
+            refreshDisplay();
+        });
+
+        // Load more
+        $btnLoadMore.addEventListener('click', () => loadMore());
+
+        // Movie grid clicks (delegation)
+        $moviesGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const movieId = parseInt(btn.dataset.id);
+            if (action === 'details') {
+                openModal(movieId);
+            } else if (action === 'fav') {
+                toggleFavorite(movieId, btn);
+            } else if (action === 'trailer') {
+                showToast('🎬 ميزة المشاهدة ستُضاف قريباً عند ربط الفيديو.');
+            }
+        });
+
+        // Modal close
+        $modalClose.addEventListener('click', closeModal);
+        $modalOverlay.addEventListener('click', (e) => {
+            if (e.target === $modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && $modalOverlay.classList.contains('open')) {
+                closeModal();
+            }
+        });
+
+        // Modal rating & watchlist (delegation on modal body)
+        $modalBody.addEventListener('click', (e) => {
+            const ratingBtn = e.target.closest('.modal-rating-stars button');
+            if (ratingBtn) {
+                const rating = parseInt(ratingBtn.dataset.rating);
+                const movieId = parseInt(ratingBtn.parentElement.dataset.movieId);
+                userRatings[movieId] = rating;
+                saveUserRatings();
+                // Refresh modal rating display
+                const allRatingBtns = $modalBody.querySelectorAll('.modal-rating-stars button');
+                allRatingBtns.forEach(b => b.classList.remove('selected'));
+                ratingBtn.classList.add('selected');
+                const existingP = $modalBody.querySelector('.modal-rating-stars + p');
+                if (existingP) existingP.remove();
+                const p = document.createElement('p');
+                p.style.cssText = 'color:#f0c060;font-size:0.85rem;margin-top:4px;';
+                p.textContent = `تقييمك: ${rating}/10`;
+                ratingBtn.parentElement.after(p);
+                showToast(`🎯 تم تقييم الفيلم بـ ${rating}/10`);
+            }
+            const wlBtn = e.target.closest('#modalWatchlistBtn');
+            if (wlBtn) {
+                const movieId = parseInt(wlBtn.dataset.id);
+                toggleWatchlist(movieId, wlBtn);
+            }
+        });
+
+        // Aside clicks
+        $comingSoonList.addEventListener('click', (e) => {
+            const item = e.target.closest('.aside-movie-item');
+            if (item) openModal(parseInt(item.dataset.id));
+        });
+        $topRatedAside.addEventListener('click', (e) => {
+            const item = e.target.closest('.aside-movie-item');
+            if (item) openModal(parseInt(item.dataset.id));
+        });
+
+        // Header buttons
+        $btnFavorites.addEventListener('click', () => {
+            if (favorites.length === 0) {
+                showToast('💔 لا توجد أفلام في المفضلة بعد.');
+                return;
+            }
+            activeCategory = null;
+            renderCategories();
+            filteredMovies = movies.filter(m => favorites.includes(m.id));
+            displayedCount = Math.min(PER_PAGE, filteredMovies.length);
+            renderMovies(filteredMovies, false);
+            window.scrollTo({ top: $moviesGrid.offsetTop - 100, behavior: 'smooth' });
+        });
+        $btnWatchlist.addEventListener('click', () => {
+            if (watchlist.length === 0) {
+                showToast('📋 لا توجد أفلام في قائمة المشاهدة بعد.');
+                return;
+            }
+            activeCategory = null;
+            renderCategories();
+            filteredMovies = movies.filter(m => watchlist.includes(m.id));
+            displayedCount = Math.min(PER_PAGE, filteredMovies.length);
+            renderMovies(filteredMovies, false);
+            window.scrollTo({ top: $moviesGrid.offsetTop - 100, behavior: 'smooth' });
+        });
+        $btnDarkMode.addEventListener('click', () => {
+            document.body.style.filter = document.body.style.filter === 'brightness(0.85) saturate(1.2)' ?
+                '' : 'brightness(0.85) saturate(1.2)';
+            showToast('🌙 تم تبديل الوضع السينمائي');
+        });
+
+        // Mobile menu
+        $mobileMenuBtn.addEventListener('click', () => {
+            $sideAside.style.display = $sideAside.style.display === 'none' ? 'block' : 'none';
+            if ($sideAside.style.display === 'block') {
+                $sideAside.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Scroll to top
+        $scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY > 400;
+            $scrollTopBtn.classList.toggle('visible', scrolled);
+            $siteHeader.classList.toggle('scrolled', window.scrollY > 30);
+        });
+
+        // ==================== FAVORITES & WATCHLIST TOGGLE ====================
+        function toggleFavorite(movieId, btnElement) {
+            if (favorites.includes(movieId)) {
+                favorites = favorites.filter(id => id !== movieId);
+                if (btnElement) btnElement.classList.remove('favorited');
+                showToast('💔 تمت إزالة الفيلم من المفضلة.');
+            } else {
+                favorites.push(movieId);
+                if (btnElement) btnElement.classList.add('favorited');
+                showToast('❤️ تمت إضافة الفيلم إلى المفضلة.');
+            }
+            saveFavorites();
+            // Update all fav buttons for this movie
+            document.querySelectorAll(`[data-action="fav"][data-id="${movieId}"]`).forEach(b => {
+                b.classList.toggle('favorited', favorites.includes(movieId));
+                b.setAttribute('aria-label', favorites.includes(movieId) ? 'إزالة من المفضلة' :
+                    'إضافة إلى المفضلة');
+            });
+        }
+
+        function toggleWatchlist(movieId, btnElement) {
+            if (watchlist.includes(movieId)) {
+                watchlist = watchlist.filter(id => id !== movieId);
+                if (btnElement) btnElement.textContent = '➕ أضف إلى قائمة المشاهدة';
+                showToast('📋 تمت إزالة الفيلم من قائمة المشاهدة.');
+            } else {
+                watchlist.push(movieId);
+                if (btnElement) btnElement.textContent = '✅ في قائمة المشاهدة';
+                showToast('📋 تمت إضافة الفيلم إلى قائمة المشاهدة.');
+            }
+            saveWatchlist();
+        }
+
+        // ==================== KEYBOARD SUPPORT ====================
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+F or / focuses search
+            if ((e.ctrlKey && e.key === 'f') || (e.key === '/' && !e.target.closest('input,textarea,select'))) {
+                e.preventDefault();
+                $searchInput.focus();
+            }
+        });
+
+        // ==================== INIT ====================
+        function init() {
+            renderCategories();
+            refreshDisplay();
+            renderComingSoon();
+            renderTopRatedAside();
+            updateBadgeDots();
+            // Handle responsive aside
+            if (window.innerWidth <= 1100) {
+                $sideAside.style.display = 'block';
+            }
+        }
+
+        // Handle window resize for responsive aside
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1100) {
+                $sideAside.style.display = '';
+            }
+        });
+
+        // Run
+        init();
+
+        console.log('🔥 Horror Gallery — جاهز للعمل | جميع الحقوق محفوظة');
+        console.log('📌 عدد الأفلام:', movies.length);
+        console.log('💡 لتعديل صورة أي فيلم، استبدل القيمة الفارغة في poster أو backdrop برابط الصورة.');
+        console.log('🎯 المفضلة:', favorites.length, '| قائمة المشاهدة:', watchlist.length);
+    </script>
+</body>
+</html>
